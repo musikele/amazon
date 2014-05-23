@@ -9,7 +9,7 @@ import org.junit.Assert;
 
 import org.junit.Test;
 
-public class IterativeSubPartEnumeratorTests {
+public class RecursiveSubPartEnumeratorTests {
 
 	@Test
 	public void testSize1() {
@@ -17,7 +17,7 @@ public class IterativeSubPartEnumeratorTests {
 		// input
 		Set<Integer> set = createSet();
 
-		SubPartEnumerator<Integer> subPartEnumerator = new IterativeSubPartEnumerator<Integer>();
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
 		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 1);
 		printCollection(subsets);
 
@@ -32,7 +32,7 @@ public class IterativeSubPartEnumeratorTests {
 		// input
 		Set<Integer> set = createSet();
 
-		SubPartEnumerator<Integer> subPartEnumerator = new IterativeSubPartEnumerator<Integer>();
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
 		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 0);
 		printCollection(subsets);
 
@@ -46,7 +46,7 @@ public class IterativeSubPartEnumeratorTests {
 		// input
 		Set<Integer> set = createSet();
 
-		SubPartEnumerator<Integer> subPartEnumerator = new IterativeSubPartEnumerator<Integer>();
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
 		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 2);
 		printCollection(subsets);
 
@@ -61,7 +61,7 @@ public class IterativeSubPartEnumeratorTests {
 		// input
 		Set<Integer> set = createSet();
 
-		SubPartEnumerator<Integer> subPartEnumerator = new IterativeSubPartEnumerator<Integer>();
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
 		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 3);
 		printCollection(subsets);
 
@@ -76,7 +76,7 @@ public class IterativeSubPartEnumeratorTests {
 		// input
 		Set<Integer> set = createSet();
 
-		SubPartEnumerator<Integer> subPartEnumerator = new IterativeSubPartEnumerator<Integer>();
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
 		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 4);
 		printCollection(subsets);
 
@@ -92,7 +92,7 @@ public class IterativeSubPartEnumeratorTests {
 		// input
 		Set<Integer> set = createSet();
 
-		SubPartEnumerator<Integer> subPartEnumerator = new IterativeSubPartEnumerator<Integer>();
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
 		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 5);
 		printCollection(subsets);
 
@@ -107,7 +107,7 @@ public class IterativeSubPartEnumeratorTests {
 		// input
 		Set<Integer> set = createSet();
 
-		SubPartEnumerator<Integer> subPartEnumerator = new IterativeSubPartEnumerator<Integer>();
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
 		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 6);
 		printCollection(subsets);
 
