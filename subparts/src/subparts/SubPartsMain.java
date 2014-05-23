@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 /*
-Given a set S = {A0, A1, A2, …, aN} with N unique symbols. Enumerate all unique subsets of size M, M <= N.
+Given a set S = {A0, A1, A2, ?, aN} with N unique symbols. Enumerate all unique subsets of size M, M <= N.
 For example, S = ('a', 'b', 'c'}, N = 3, M = 2, the unique subsets are {'a', 'b'}, {'a', 'c'}, and {'b', 'c'}.
 Please write a recursive solution as well as an iterative solution and discuss the performance.
 */
-public class SubParts {
+public class SubPartsMain {
 
 	public static void main(String[] args) {
 

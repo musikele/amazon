@@ -7,44 +7,49 @@ import java.util.Set;
 public class IterativeSubPartEnumerator<E> implements SubPartEnumerator<E> {
 
 	@Override
-	public List<List<E>> getSubsets(Set<E> set, int subsetSize) {
-		
+	public List<List<E>> getSubsets(Set<E> set, int sizeOfSubset) {
+		//this will be the output
 		List<List<E>> subParts = new ArrayList<>();
-		
+		//will work with arrays to better manage low level memory 
 		Object[] arraySet = set.toArray(); 
-		
-		if (subsetSize > set.size() || subsetSize <= 0 ) 
+		//check on input size
+		if (sizeOfSubset > set.size() || sizeOfSubset <= 0 ) 
 			return null; 
 		
-		int[] cursor = new int[subsetSize];
-		int[] whereWeAre = new int[subsetSize];
+		//this array holds the indexes of the current subset
+		int[] cursor = new int[sizeOfSubset];
 		
-		for (int i=0; i<subsetSize ; i++) {
+		//this array holds the current iteration and will be updated 
+		//when cursor[sizeOfSubset-1] reaches the end of the subset.
+		//if size = 2, it will contain [1,2], than [2,3], etc. 
+		int[] whereWeAre = new int[sizeOfSubset];
+		
+		//initialization of the two arrays 
+		for (int i=0; i<sizeOfSubset ; i++) {
 			cursor[i] = i; 
 			whereWeAre[i] = i;
 		}
 		
+		//flag for the main loop
 		boolean stayAlive = true; 
 		
 		while (stayAlive) {
 			
-			if (cursor[0] == set.size()-subsetSize ) {
+			// check to see if we are at the end 
+			if (cursor[0] == set.size()-sizeOfSubset ) {
 				stayAlive = false; 
 			}
 			
-//			if (cursor[cursor.length-1] == set.size()) {
-//					updateCursorAndWhereWeAre(cursor, whereWeAre); 
-//			}
-			
+			//this variable is the subPart that will be calculated in this iteration
 			List<E> subPart = new ArrayList<>(); 
+
 			
-			for (int i=0; i<subsetSize ; i++) {
-				
+			for (int i=0; i<sizeOfSubset ; i++) {
 				subPart.add((E) arraySet[cursor[i]]);
 				
 			}
 			
-			for (int j = subsetSize-1 ; j>=0 ; j-- ) {
+			for (int j = sizeOfSubset-1 ; j>=0 ; j-- ) {
 				if (cursor[j] != set.size()-1) {
 					cursor[j]++;
 					break; 
