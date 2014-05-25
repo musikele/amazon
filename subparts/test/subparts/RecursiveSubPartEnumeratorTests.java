@@ -5,29 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
 public class RecursiveSubPartEnumeratorTests {
 
-	@Test
-	public void testSize2of3() {
-
-		// input
-		Set<Integer> set = createSet();
-		set.remove(4);
-		set.remove(5); 
-
-		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
-		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 2);
-		printCollection(subsets);
-
-		Assert.assertNotNull(subsets);
-		Assert.assertTrue(subsets.size() == 3);
-
-	}
-	
 	@Test
 	public void testSize1() {
 
