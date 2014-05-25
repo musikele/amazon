@@ -20,15 +20,9 @@ public class IterativeSubPartEnumerator<E> implements SubPartEnumerator<E> {
 		// this array holds the indexes of the current subset
 		int[] cursor = new int[sizeOfSubset];
 
-		// this array holds the current iteration and will be updated
-		// when cursor[sizeOfSubset-1] reaches the end of the subset.
-		// if size = 2, it will contain [1,2], than [2,3], etc.
-		int[] whereWeAre = new int[sizeOfSubset];
-
 		// initialization of the two arrays
 		for (int i = 0; i < sizeOfSubset; i++) {
 			cursor[i] = i;
-			whereWeAre[i] = i;
 		}
 
 		// flag for the main loop
@@ -43,20 +37,30 @@ public class IterativeSubPartEnumerator<E> implements SubPartEnumerator<E> {
 
 			// this variable is the subPart that will be calculated in this
 			// iteration
-			List<E> subPart = new ArrayList<>();
+			List<E> subset = new ArrayList<>();
 
+			//let's add to the subset the elements defined by the cursor
 			for (int i = 0; i < sizeOfSubset; i++) {
-				subPart.add((E) arraySet[cursor[i]]);
+				subset.add((E) arraySet[cursor[i]]);
 			}
 
+			//check this method to understand how cursors are built
 			updateCursor(cursor, set.size());
 
-			subParts.add(subPart);
+			subParts.add(subset);
 		}
 
 		return subParts;
 	}
 	
+	
+	/**
+	 * If the set size is 5, and we have a subsetSize of 3 (defined here by cursor.length), this 
+	 * private method will build the cursor by enumerating all the positions of the items in the set 
+	 * to choose. Example (positions will start from 0): [0,1,2] [0,1,3], [0,1,4] [0,2,3] [0,2,4] etc.   
+	 * @param cursor is the array of the various cursors needed to choose the items of the subset. 
+	 * @param setSize the size of the set. 
+	 */
 	private void updateCursor(int[] cursor, int setSize ) {
 		
 		if (cursor[cursor.length-1] != setSize-1 ) {

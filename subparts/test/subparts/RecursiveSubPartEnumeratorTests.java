@@ -168,4 +168,32 @@ public class RecursiveSubPartEnumeratorTests {
 		System.out.println(toReturn);
 	}
 
+	
+	@Test
+	public void testEmptySet() {
+		Set<Integer> set = new HashSet<Integer>();
+//		for (int i=1; i<=16; i++)
+//			set.add(i);
+		
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
+		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 8);
+		printCollection(subsets);
+
+		Assert.assertNull(subsets);
+//		Assert.assertEquals(12870, subsets.size());
+	}
+	
+	@Test
+	public void test16of16() {
+		Set<Integer> set = new HashSet<Integer>();
+		for (int i=1; i<=16; i++)
+			set.add(i);
+		
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
+		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 16);
+		printCollection(subsets);
+
+		Assert.assertNotNull(subsets);
+		Assert.assertEquals(1, subsets.size());
+	}
 }

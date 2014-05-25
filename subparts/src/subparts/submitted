@@ -1,0 +1,199 @@
+/*----------------------------- interface ------------------------------*/
+package subparts;
+import java.util.List;
+import java.util.Set;
+
+public interface SubPartEnumerator<E> {
+
+	/**
+	 * Will enumerate all subsets of the set in input of size subsetSize. 
+	 * @param set a set of unique elements
+	 * @param subsetSize the size of the subsets to search 
+	 * @return a list of subsets
+	 */
+	public List<List<E>> getSubsets(Set<E> set, int subsetSize); 
+	
+}
+
+/* ------------------------ iterative version -------------------*/
+/* 
+I think this will run exactly n!/k!*(k-n)! , that is the number of possible permutations. 
+This is a very big number for relatively small inputs, in fact when I test it with n=30 and k=18 
+there are more than 80 million permutations, and java throws outOfMemory. 
+ */
+package subparts;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+public class IterativeSubPartEnumerator<E> implements SubPartEnumerator<E> {
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<List<E>> getSubsets(Set<E> set, int sizeOfSubset) {
+		// this will be the output
+		List<List<E>> subParts = new ArrayList<>();
+		// will work with arrays to better manage low level memory
+		Object[] arraySet = set.toArray();
+		// check on input size
+		if (sizeOfSubset > set.size() || sizeOfSubset <= 0)
+			return null;
+
+		// this array holds the indexes of the current subset
+		int[] cursor = new int[sizeOfSubset];
+
+		// initialization of the two arrays
+		for (int i = 0; i < sizeOfSubset; i++) {
+			cursor[i] = i;
+		}
+
+		// flag for the main loop
+		boolean stayAlive = true;
+
+		while (stayAlive) {
+
+			// check to see if we are at the end
+			if (cursor[0] == set.size() - sizeOfSubset) {
+				stayAlive = false;
+			}
+
+			// this variable is the subPart that will be calculated in this
+			// iteration
+			List<E> subset = new ArrayList<>();
+
+			//let's add to the subset the elements defined by the cursor
+			for (int i = 0; i < sizeOfSubset; i++) {
+				subset.add((E) arraySet[cursor[i]]);
+			}
+
+			//check this method to understand how cursors are built
+			updateCursor(cursor, set.size());
+
+			subParts.add(subset);
+		}
+
+		return subParts;
+	}
+	
+	
+	/**
+	 * If the set size is 5, and we have a subsetSize of 3 (defined here by cursor.length), this 
+	 * private method will build the cursor by enumerating all the positions of the items in the set 
+	 * to choose. Example (positions will start from 0): [0,1,2] [0,1,3], [0,1,4] [0,2,3] [0,2,4] etc.   
+	 * @param cursor is the array of the various cursors needed to choose the items of the subset. 
+	 * @param setSize the size of the set. 
+	 */
+	private void updateCursor(int[] cursor, int setSize ) {
+		
+		if (cursor[cursor.length-1] != setSize-1 ) {
+				cursor[cursor.length-1]++;
+		} else {
+			for (int j=cursor.length-1 ; j>0 ; j--) {
+				if (j-1 >= 0 && cursor[j] - cursor[j-1] != 1) {
+					cursor[j-1] = cursor[j-1]+1; 
+					for (int i = j ; i< cursor.length; i++) {
+						cursor[i] = cursor[i-1]+1;
+					}
+					break; 
+				}
+			}
+		}
+		
+	}
+
+}
+
+/* ------------------ RECURSIVE VERSION ----------------------*/ 
+/*
+A measured running time of this alghoritm gives the same results (in terms of milliseconds) 
+of the iterative one, so at least I can say that they both run at the same speed. 
+During my tests I have checked that the number of elements returned was the same. 
+I believe this algorithm has this recurrency equation: 
+T(n) = 2*T(n-1) + c (constant time)
+because the alghoritm calls itself twice with a smaller input. 
+Exploding this recurrency expression we should achieve a number close to 2^n + n*c = O(2^n)  . 
+*/
+package subparts;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+public class RecursiveSubPartEnumerator<E> implements SubPartEnumerator<E> {
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<List<E>> getSubsets(Set<E> set, int subsetSize) {
+
+		//my default: instead of the empty list i return null
+		if (subsetSize <= 0) return null;
+		if (subsetSize > set.size()) return null;
+		
+		List<List<E>> output = new LinkedList<List<E>>();
+		
+		//start recursion!
+		recursiveStep(new LinkedList<>(set), subsetSize, subsetSize, (E[]) new Object[0], output);
+		
+		return output; 
+	}
+
+	/**
+	 * searches sublists in a recursive way. 
+	 * @param input the list in input. It is assumed that is a list of unique items.
+	 * @param subSize the size of the currently searching subset. It is decremented during recursive iterations 
+	 * @param originalSubSize the size of the subsets to be found 
+	 * @param currentList the list that the recursion is currently building 
+	 * @param output the set of subsets built by the algorithm. If the recursiveStep finds a subset of elements, they will be added to output. 
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void recursiveStep(List<E> input, int subSize, int originalSubSize, E[] currentList, List<List<E>> output) {
+		
+		//base cases
+		if ( subSize == 0 )
+			return; 
+		
+		if (input.isEmpty()) 
+			return; 
+		
+		if (currentList.length > originalSubSize) return;
+		
+		if (input.size() < subSize) return;
+		
+		//my array of elements. I've decided to use arrays to work with low level memory and 
+		//to avoid problems with pointers and function scope. 
+		//newCurrentList is the list that I'm building in this branch of the recursion
+		E[] newCurrentList = (E[]) new Object[currentList.length + 1]; 
+		
+		//we add the first element of the input to the last position of the array 
+		newCurrentList[newCurrentList.length-1] = input.get(0);
+		
+		//...then we copy the partial solution that we are building 
+		copyArrayFromFirstPosition(newCurrentList, currentList);
+		
+		//two recursive steps: the first is on a subList of smaller size
+		recursiveStep(input.subList(1, input.size()), subSize-1, originalSubSize, newCurrentList, output); 
+		//the second is on a smaller sublist but we are not decrementing the subsize 
+		recursiveStep(input.subList(1, input.size()), subSize, originalSubSize, currentList, output); 
+		
+		//if the list built in the recursion is equal to original chosen size we will add it to the output
+		if (newCurrentList.length == originalSubSize) 
+			output.add(new LinkedList(Arrays.asList(newCurrentList))); 
+		
+		
+	}
+	
+	/**
+	 * 
+	 * @param newCurrentList the list in wich we will copy 
+	 * @param currentList the list to be copied 
+	 */
+	private void copyArrayFromFirstPosition(E[] newCurrentList, E[] currentList) {
+		for (int i=0; i<currentList.length; i++) {
+		newCurrentList[i] = currentList[i]; 
+		}
+	}
+	
+
+}
