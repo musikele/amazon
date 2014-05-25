@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class IterativeSubPartEnumerator<E> implements SubPartEnumerator<E> {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<List<E>> getSubsets(Set<E> set, int sizeOfSubset) {
 		// this will be the output
@@ -48,24 +49,30 @@ public class IterativeSubPartEnumerator<E> implements SubPartEnumerator<E> {
 				subPart.add((E) arraySet[cursor[i]]);
 			}
 
-			if (cursor[sizeOfSubset - 1] != set.size() - 1) {
-				cursor[sizeOfSubset - 1]++;
-			} else {
-				updateCursorAndWhereWeAre(cursor, whereWeAre);
-			}
+			updateCursor(cursor, set.size());
 
 			subParts.add(subPart);
 		}
 
 		return subParts;
 	}
-
-	private void updateCursorAndWhereWeAre(int[] cursor, int[] whereWeAre) {
-		for (int i = 0; i < whereWeAre.length; i++) {
-			whereWeAre[i]++;
-			cursor[i] = whereWeAre[i];
+	
+	private void updateCursor(int[] cursor, int setSize ) {
+		
+		if (cursor[cursor.length-1] != setSize-1 ) {
+				cursor[cursor.length-1]++;
+		} else {
+			for (int j=cursor.length-1 ; j>0 ; j--) {
+				if (j-1 >= 0 && cursor[j] - cursor[j-1] != 1) {
+					cursor[j-1] = cursor[j-1]+1; 
+					for (int i = j ; i< cursor.length; i++) {
+						cursor[i] = cursor[i-1]+1;
+					}
+					break; 
+				}
+			}
 		}
-
+		
 	}
 
 }

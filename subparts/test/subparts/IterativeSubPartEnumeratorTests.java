@@ -67,7 +67,7 @@ public class IterativeSubPartEnumeratorTests {
 
 		Assert.assertNotNull(subsets);
 
-		Assert.assertTrue(subsets.size() == 6);
+		Assert.assertTrue(subsets.size() == 10);
 	}
 	
 	@Test
@@ -82,7 +82,7 @@ public class IterativeSubPartEnumeratorTests {
 
 		Assert.assertNotNull(subsets);
 
-		Assert.assertTrue(subsets.size() == 3);
+		Assert.assertTrue(subsets.size() == 5);
 	}
 	
 	
@@ -114,14 +114,25 @@ public class IterativeSubPartEnumeratorTests {
 		Assert.assertNull(subsets);
 
 	}
+	
+	@Test
+	public void testHighNumbers() {
+		Set<Integer> set = new HashSet<Integer>();
+		for (int i=1; i<=16; i++)
+			set.add(i);
+		
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
+		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 8);
+		printCollection(subsets);
 
+		Assert.assertNotNull(subsets);
+		Assert.assertEquals(12870, subsets.size());
+	}
+	
 	private Set<Integer> createSet() {
 		Set<Integer> set = new HashSet<Integer>();
-		set.add(1);
-		set.add(2);
-		set.add(3);
-		set.add(4);
-		set.add(5);
+		for (int i=1; i<=5; i++)
+			set.add(i);
 		return set;
 	}
 

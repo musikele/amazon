@@ -1,12 +1,12 @@
 package subparts;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
 public class RecursiveSubPartEnumeratorTests {
@@ -57,6 +57,7 @@ public class RecursiveSubPartEnumeratorTests {
 	
 	@Test
 	public void testSize3() {
+		//{[1, 2, 5]X,[1, 2, 4]X,[1, 2, 3]X,[1, 3, 5],[1, 3, 4],[1, 4, 5],[2, 3, 5]X,[2, 3, 4]X,[2, 4, 5],[3, 4, 5]X}
 
 		// input
 		Set<Integer> set = createSet();
@@ -67,7 +68,7 @@ public class RecursiveSubPartEnumeratorTests {
 
 		Assert.assertNotNull(subsets);
 
-		Assert.assertTrue(subsets.size() == 6);
+		Assert.assertTrue(subsets.size() == 10);
 	}
 	
 	@Test
@@ -82,7 +83,7 @@ public class RecursiveSubPartEnumeratorTests {
 
 		Assert.assertNotNull(subsets);
 
-		Assert.assertTrue(subsets.size() == 3);
+		Assert.assertTrue(subsets.size() == 5);
 	}
 	
 	
@@ -114,16 +115,41 @@ public class RecursiveSubPartEnumeratorTests {
 		Assert.assertNull(subsets);
 
 	}
+	
+	@Test
+	public void test2of3() {
+		Set<Integer> set = new HashSet<Integer>();
+		Collections.addAll(set, 1,2,3); 
+		
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
+		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 2);
+		printCollection(subsets);
 
+		Assert.assertNotNull(subsets);
+		Assert.assertTrue(subsets.size() == 3);
+	}
+	
+	@Test
+	public void testHighNumbers() {
+		Set<Integer> set = new HashSet<Integer>();
+		for (int i=1; i<=16; i++)
+			set.add(i);
+		
+		SubPartEnumerator<Integer> subPartEnumerator = new RecursiveSubPartEnumerator<Integer>();
+		List<List<Integer>> subsets = subPartEnumerator.getSubsets(set, 8);
+		printCollection(subsets);
+
+		Assert.assertNotNull(subsets);
+		Assert.assertEquals(12870, subsets.size());
+	}
+	
 	private Set<Integer> createSet() {
 		Set<Integer> set = new HashSet<Integer>();
-		set.add(1);
-		set.add(2);
-		set.add(3);
-		set.add(4);
-		set.add(5);
+		for (int i=1; i<=5; i++)
+			set.add(i);
 		return set;
 	}
+
 
 	static void printCollection(Collection<?> c) {
 
